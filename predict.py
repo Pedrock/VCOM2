@@ -2,7 +2,6 @@ import sys
 import argparse
 import numpy as np
 from PIL import Image
-import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
 
@@ -11,7 +10,7 @@ from keras.models import load_model
 from keras.applications.inception_v3 import preprocess_input
 
 
-target_size = (229, 229) #fixed size for InceptionV3 architecture
+target_size = (299, 299) #fixed size for InceptionV3 architecture
 
 
 def predict(model, img, target_size):
@@ -43,9 +42,9 @@ def plot_preds(image, preds):
     plt.axis('off')
 
     plt.figure()
-    labels = ("cat", "dog")
-    plt.barh([0, 1], preds, alpha=0.5)
-    plt.yticks([0, 1], labels)
+    labels = ['Airport', 'BareLand', 'BaseballField', 'Beach', 'Bridge', 'Center', 'Church', 'Commercial', 'DenseResidential', 'Desert', 'Farmland', 'Forest', 'Industrial', 'Meadow', 'MediumResidential', 'Mountain', 'Park', 'Parking', 'Playground', 'Pond', 'Port', 'RailwayStation', 'Resort', 'River', 'School', 'SparseResidential', 'Square', 'Stadium', 'StorageTanks', 'Viaduct']
+    plt.barh(np.arange(len(labels)), preds, alpha=0.5)
+    plt.yticks(np.arange(len(labels)), labels)
     plt.xlabel('Probability')
     plt.xlim(0,1.01)
     plt.tight_layout()
@@ -55,11 +54,10 @@ def plot_preds(image, preds):
 if __name__=="__main__":
     a = argparse.ArgumentParser()
     a.add_argument("--image", help="path to image")
-    a.add_argument("--image_url", help="url to image")
     a.add_argument("--model")
     args = a.parse_args()
 
-    if args.image is None and args.image_url is None:
+    if args.image is None:
         a.print_help()
         sys.exit(1)
 
@@ -67,11 +65,6 @@ if __name__=="__main__":
     if args.image is not None:
         img = Image.open(args.image)
         preds = predict(model, img, target_size)
-        plot_preds(img, preds)
-
-    if args.image_url is not None:
-        response = requests.get(args.image_url)
-        img = Image.open(BytesIO(response.content))
-        preds = predict(model, img, target_size)
+        print(preds)
         plot_preds(img, preds)
 
