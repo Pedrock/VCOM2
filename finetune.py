@@ -13,8 +13,8 @@ from keras.optimizers import SGD
 
 
 IM_WIDTH, IM_HEIGHT = 299, 299 # fixed size for InceptionV3
-epochsS = 50
-BAT_SIZE = 32
+EPOCHS = 100
+BAT_SIZE = 16
 FC_SIZE = 1024
 NB_IV3_LAYERS_TO_FREEZE = 172
 
@@ -81,7 +81,7 @@ def train(args):
     # data prep
     train_datagen = ImageDataGenerator(
             preprocessing_function = preprocess_input,
-            rotation_range = 30,
+            rotation_range = 180,
             width_shift_range = 0.2,
             height_shift_range = 0.2,
             shear_range = 0.2,
@@ -90,7 +90,7 @@ def train(args):
     )
     test_datagen = ImageDataGenerator(
             preprocessing_function = preprocess_input,
-            rotation_range = 30,
+            rotation_range = 180,
             width_shift_range = 0.2,
             height_shift_range = 0.2,
             shear_range = 0.2,
@@ -164,7 +164,7 @@ if __name__=="__main__":
     a = argparse.ArgumentParser()
     a.add_argument("--train_dir")
     a.add_argument("--val_dir")
-    a.add_argument("--epochs", default = epochsS)
+    a.add_argument("--epochs", default = EPOCHS)
     a.add_argument("--batch_size", default = BAT_SIZE)
     a.add_argument("--output_model_file", default = "inceptionv3-ft.model")
     a.add_argument("--plot", action = "store_true")
