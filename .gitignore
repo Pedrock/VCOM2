@@ -1,4 +1,7 @@
 .vscode/
+output_weights/
+output_graphs/
+*.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
